@@ -4,9 +4,14 @@ import matplotlib.pyplot as plt
 
 from helpers import *
 
+
 line = np.array(pd.read_csv("train.txt", header=None, delim_whitespace=True, nrows=2))
-train_data = pd.read_csv("train.txt", skiprows=[0, 1], header=None, delim_whitespace=True)
+data = pd.read_csv("train.txt", skiprows=[0, 1], header=None, delim_whitespace=True)
+
 M, L, N, K = int(line[0][0]), int(line[0][1]), int(line[0][2]), int(line[1][0])
+X = np.array((data.iloc[:,0:M]))
+Y = np.array(data.iloc[:, M:])
+
 
 print("M = ", M)  # N is number of Input Nodes
 print("L = ", L)  # L is number of Hidden Nodes
@@ -16,49 +21,31 @@ print("K = ", K)  # K, the number of training examples
 # first M values are X vector
 # last N values are output values.
 
-# separate X (training data) from y (target variable)
-cols = train_data.shape[1]
-X = train_data.iloc[:, 0: int(M)]
-Y = train_data.iloc[:, int(M):]
+for i in range(K):
+    X[i] = (X[i] - np.mean(X[i]))/ np.std(X[i])
 
-# rescaling data
-X = (X - X.mean()) / X.std()
+n, m = X.shape
+X0 = np.ones((n, 1))
+X = np.hstack((X0, X))
+M += 1
 
-# add ones column
-X.insert(0, 'Ones', 1)
-X = np.array(X)
-print(X)
+w1 = []
+for l in range(L):
+    w1.append(np.array(np.random.randn(M)*0.1))
 
-M = M + 1
-# weights = np.array([0] * 2)
-#
-# weights[0] = np.array([[0]*M for i in range(L)])
-# weights[1] = np.array([[0]*L for i in range(N)])
+w2 = []
+for n in range(N):
+    w2.append(np.array(np.random.randn(L)*0.1))
 
-w1 = np.array([[0]*M for i in range(L)])
-w2 = np.array([[0]*L for i in range(N)])
-weights = np.array([w1,w2])
+alpha = 0.03
+n_iterations = 100
+w1, w2, cost = gradient_descent(X, Y, M, L, N, K, w1, w2, alpha, n_iterations)
 
-# w = np.array([[[0]*M for i in range(L)] , [[0]*L for i in range(N)]])
-# X = X.iloc[:, :]
-# Y = Y.iloc[:, 0]
-
-print(w1)  # from x to hidden layer
-print(w2)  # from hidden layer to output
-
-learning_rate = 0.03
-n_iterations = 500
-
-# w1 = pd.DataFrame(w1)
-#
-# print(w1.T.shape)
-# print(X.shape)
-
-# Ah = f( 𝑾𝒉 ∗ 𝑨𝒉−𝟏 )
-print(sum(np.dot(np.array(weights[0]) , np.array(X.T))))
-
-print(np.array(weights[0][1]))
-
-print(np.array(X))
-# print(calc_input_to_next_layer(weights,X,2))
-
+print(cost)
+# draw error graph
+fig, ax = plt.subplots(figsize=(5, 5))
+ax.plot(np.arange(n_iterations), cost, 'r')
+ax.set_xlabel('Iterations')
+ax.set_ylabel('Cost')
+ax.set_title('total cost graph')
+plt.show()
