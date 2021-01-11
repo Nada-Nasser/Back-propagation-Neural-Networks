@@ -31,6 +31,7 @@ def gradient_descent(X, Y, M, L, N, K, Wh, Wo, alpha, n_iterations):
     cost = []  # list to store the cost in every iteration,
 
     for iteration in range(n_iterations):  # start the algorithm
+        c = 0
         for train in range(K):
             x = X[train]
             y = Y[train]
@@ -65,13 +66,15 @@ def gradient_descent(X, Y, M, L, N, K, Wh, Wo, alpha, n_iterations):
             for k in range(N):
                 for j in range(L):
                     # 𝒘𝒌𝒋𝒐 = 𝒘𝒌𝒋𝒐 – η * 𝛅𝒌𝒐 * 𝒂𝒋𝒉
-                    Wo[k][j] = Wo[k][j] - alpha * delta_o[k] * ah[j]
+                    Wo[k][j] = Wo[k][j] - (alpha * delta_o[k] * ah[j])
 
             for j in range(L):
                 for i in range(M):
                     # 𝒘𝒋𝒊𝒉 = 𝒘𝒋𝒊𝒉 – η * 𝛅𝒋𝒉 * 𝒙𝒊
-                    Wh[j][i] = Wh[j][i] - alpha * delta_h[j] * x[i]
+                    Wh[j][i] = Wh[j][i] - (alpha * delta_h[j] * x[i])
 
-        cost.append(compute_cost(N,ao,y))
+            c+= compute_cost(N,ao,y)
 
+        cost.append(c/K)
+        print(Wo)
     return Wh, Wo, cost

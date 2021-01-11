@@ -1,15 +1,17 @@
-import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
 
 from helpers import *
-
 
 line = np.array(pd.read_csv("train.txt", header=None, delim_whitespace=True, nrows=2))
 data = pd.read_csv("train.txt", skiprows=[0, 1], header=None, delim_whitespace=True)
 
 M, L, N, K = int(line[0][0]), int(line[0][1]), int(line[0][2]), int(line[1][0])
-X = np.array((data.iloc[:,0:M]))
+
+X_data = (data.iloc[:,0:M])
+X_data = (X_data - X_data.mean())/ X_data.std()
+
+X = np.array(X_data)
 Y = np.array(data.iloc[:, M:])
 
 
@@ -21,9 +23,6 @@ print("K = ", K)  # K, the number of training examples
 # first M values are X vector
 # last N values are output values.
 
-for i in range(K):
-    X[i] = (X[i] - np.mean(X[i]))/ np.std(X[i])
-
 n, m = X.shape
 X0 = np.ones((n, 1))
 X = np.hstack((X0, X))
@@ -31,13 +30,16 @@ M += 1
 
 w1 = []
 for l in range(L):
-    w1.append(np.array(np.random.randn(M)*0.1))
+    w1.append(np.array(np.random.randn(M)*0.00001))
 
 w2 = []
 for n in range(N):
-    w2.append(np.array(np.random.randn(L)*0.1))
+    w2.append(np.array(np.random.randn(L)*0.00001))
 
-alpha = 0.03
+
+print(w2)
+
+alpha = 0.0003
 n_iterations = 100
 w1, w2, cost = gradient_descent(X, Y, M, L, N, K, w1, w2, alpha, n_iterations)
 
