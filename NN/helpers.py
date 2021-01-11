@@ -5,7 +5,7 @@ def activation_function(v):
     return 1/(1+(np.exp(-v)))
 
 
-def input_to_hidden_neuron(j, m, w1, x):
+def FeedForward(j, m, w1, x): #feedForward
     summation = 0
     for i in range(m):
         summation += w1[j][i] * x[i]
@@ -19,14 +19,6 @@ def compute_cost(N, ao, y):
         error += (1.0/2) * pow(ao[k] - y[k],2)
     return error
 
-
-def input_to_output_neuron(k, L, w, ah):
-    summation = 0
-    for j in range(L):
-        summation += w[k][j] * ah[j]
-    return activation_function(summation)
-
-
 def gradient_descent(X, Y, M, L, N, K, Wh, Wo, alpha, n_iterations):
     cost = []  # list to store the cost in every iteration,
 
@@ -39,12 +31,12 @@ def gradient_descent(X, Y, M, L, N, K, Wh, Wo, alpha, n_iterations):
             # feedforward
             ah = []
             for j in range(L):  # For each hidden layer neuron j
-                aj = input_to_hidden_neuron(j, M, Wh, x)
+                aj = FeedForward(j, M, Wh, x)
                 ah.append(aj)
 
             ao = []
             for k in range(N):  # For each output layer neuron k
-                ak = input_to_output_neuron(k, L, Wo, ah)
+                ak = FeedForward(k, L, Wo, ah)
                 ao.append(ak)
 
             # backpropagation
@@ -76,5 +68,5 @@ def gradient_descent(X, Y, M, L, N, K, Wh, Wo, alpha, n_iterations):
             c+= compute_cost(N,ao,y)
 
         cost.append(c/K)
-        print(Wo)
+        #print(Wo)
     return Wh, Wo, cost
