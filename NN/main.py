@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 
-from NN.helpers import *
+from helpers import *
 
 
 def read_data(fileName):
@@ -42,13 +42,11 @@ def part_1(fileName):
     for n in range(N):
         w2.append(np.array(np.random.randn(L) * 0.00001))
 
-    print(w2)
-
     alpha = 0.0003
-    n_iterations = 1000
+    n_iterations = 100
     w1, w2, cost = gradient_descent(X, Y, M, L, N, K, w1, w2, alpha, n_iterations)
 
-    print(cost[999])
+    # print(cost[999])
     # draw error graph
     fig, ax = plt.subplots(figsize=(5, 5))
     ax.plot(np.arange(n_iterations), cost, 'r')
@@ -61,6 +59,7 @@ def part_1(fileName):
 
 
 def part_2(fileName, HiddenW, OutputW):
+    print("\n\nTesting : ")
     M, L, N, K, X, Y = read_data(fileName)
     print("M = ", M)  # N is number of Input Nodes
     print("L = ", L)  # L is number of Hidden Nodes
