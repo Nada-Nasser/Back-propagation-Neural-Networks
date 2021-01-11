@@ -14,7 +14,7 @@ def read_data(fileName):
     X_data = (X_data - X_data.mean()) / X_data.std()
 
     X = np.array(X_data)
-    Y = np.array(data.iloc[:, M:])
+    Y = np.array((data.iloc[:, M:]) /data.iloc[:, M:].max())
 
     return M, L, N, K, X, Y
 
@@ -43,7 +43,7 @@ def part_1(fileName):
         w2.append(np.array(np.random.randn(L) * 0.00001))
 
     alpha = 0.0003
-    n_iterations = 100
+    n_iterations = 300
     w1, w2, cost = gradient_descent(X, Y, M, L, N, K, w1, w2, alpha, n_iterations)
 
     # print(cost[999])
