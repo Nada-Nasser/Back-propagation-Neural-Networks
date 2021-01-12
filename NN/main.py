@@ -80,17 +80,20 @@ def part_2(fileName, HiddenW, OutputW):
         y = Y[i]
 
         # feedforward
-        ah = []
+        ah = [] # output of each neuron in the hidden layer
         for j in range(L):  # For each hidden layer neuron j
-            aj = FeedForward(j, M, HiddenW, x)
+            # use feed_forward to get the output of the hidden layer using x(training example)
+            # as input to this layer
+            aj = feed_forward(j, M, HiddenW, x)
             ah.append(aj)
 
-        ao = []
+        ao = []  # output of each neuron in the out layer
         for k in range(N):  # For each output layer neuron k
-            ak = FeedForward(k, L, OutputW, ah)
+            # use feed_forward to get the output of the out layer using [ah] as input to this layer
+            ak = feed_forward(k, L, OutputW, ah)
             ao.append(ak)
 
-        c += compute_cost(N, ao, y)
+        c += compute_cost(N, ao, y)  # compute cost for current training example x
 
     print("MSE with best weights : ", c / K)
 
